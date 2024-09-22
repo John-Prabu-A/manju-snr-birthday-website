@@ -1,7 +1,7 @@
 {
-  "name": "reveal.js",
+  "name": "Happy Birthday Senior",
   "version": "5.1.0",
-  "description": "The HTML Presentation Framework",
+  "description": "Our lovely Mnju Priya Senior",
   "homepage": "https://revealjs.com",
   "subdomain": "revealjs",
   "main": "dist/reveal.js",
@@ -13,13 +13,9 @@
     "build": "gulp build"
   },
   "author": {
-    "name": "Hakim El Hattab",
-    "email": "hakim.elhattab@gmail.com",
-    "web": "https://hakim.se"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/hakimel/reveal.js.git"
+    "name": "John Prabu A",
+    "email": "johnprabu0702@gmail.com",
+    "web": "https://jpdevland.com"
   },
   "engines": {
     "node": ">=18.0.0"

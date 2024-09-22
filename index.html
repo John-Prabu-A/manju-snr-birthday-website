@@ -1,40 +1,544 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<title>reveal.js</title>
+<head>
+	<meta charset="utf-8">
+	<title>Birthday Gift</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+	<!-- Reveal.js Core and Theme -->
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/theme/black.css" id="theme">
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+	<!-- Fonts -->
+	<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Lora&display=swap"
+		rel="stylesheet">
+
+	<style>
+		section {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			flex-direction: column;
+		}
+
+		h2,
+		p {
+			font-family: 'Playfair Display', serif;
+			color: #d8b4ff;
+			margin: 0.5rem !important;
+		}
+
+		/* Image Effects */
+		img {
+			width: auto;
+			height: 90vh;
+			border: 5px solid #8a2be2;
+			box-shadow: 0px 0px 20px #a569bd;
+			transition: transform 1.5s ease, filter 1.5s ease;
+		}
+
+		img:hover {
+			transform: rotate(10deg) !important;
+			filter: brightness(1.1) !important;
+		}
+
+		/* Background image section */
+		.bg-section {
+			background-position: center;
+			background-size: cover;
+			height: 100vh;
+			color: #ffffff;
+			text-shadow: 2px 2px 10px #000;
+		}
+
+		/* Styling for each image slide */
+		.song-section {
+			background-color: rgba(0, 0, 0, 0.7);
+			padding: 30px;
+			text-align: center;
+			border-radius: 10px;
+			box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+			font-size: 2.5rem;
+		}
+
+		.bg-text {
+			padding: 50px;
+			font-size: 1.5em;
+			font-family: 'Lora', serif;
+		}
+
+		#music_player {
+			position: relative;
+			width: 100%;
+			height: 100vh;
+		}
+
+		#player02 {
+			position: absolute;
+			margin: 1%;
+			bottom: 0;
+			left: 0;
+			z-index: 1000;
+			display: block;
+			transform: scale(0.8);
+			/* Scales the component to 80% of its original size */
+			transform-origin: bottom left;
+			/* Ensures scaling happens from the bottom-left corner */
+		}
+
+		.player {
+			background-color: rgba(8, 7, 71, 0.7);
+			/* background-image: url("./images/heeriye_cover.jpeg"); */
+			background-size: cover;
+			background-position: center;
+			background-color: rgba(0, 0, 0, 0.5);
+			/* Fallback color */
+			background-blend-mode: multiply;
+			margin: 1rem;
+			padding: 1rem;
+			border-radius: 20px;
+		}
+
+		.player img {
+			width: 3rem;
+			height: 3rem;
+			margin: 0;
+			padding: 0;
+			object-fit: cover;
+			border-radius: 10px;
+		}
+
+		.info {
+			color: #E1E1E6;
+		}
+
+		.info p {
+			opacity: 0.68;
+			font-size: 1rem;
+			padding: 0;
+			margin: 0 !important;
+		}
+
+		.info h1 {
+			font-size: small;
+			margin-bottom: 0;
+			padding-bottom: 0;
+		}
+
+		.info-wrapper {
+			align-items: center;
+			gap: 0.5rem;
+			display: flex !important;
+		}
+
+		.player h1 {
+			font-size: 27px;
+			color: #E1E1E6;
+			padding-bottom: 0.3rem;
+		}
+
+		.song-controls {
+			display: flex;
+			gap: 10px;
+			justify-items: center;
+			padding-top: 0.5rem;
+			width: 100%;
+		}
+
+		.track {
+			padding-top: 0.5rem;
+			position: relative;
+		}
+
+		.track::before {
+			content: '';
+			height: 6px;
+			width: 100%;
+			display: block;
+			background: #D9D9D9;
+			opacity: 0.3;
+			border-radius: 10px;
+			position: absolute;
+		}
+
+
+		.track::after {
+			content: '';
+			height: 6px;
+			width: 85%;
+			display: block;
+			background: #D9D9D9;
+			border-radius: 10px;
+		}
+
+		.track {
+			padding-top: 0.5rem;
+			position: relative;
+			margin: 10px 0;
+		}
+
+		.time {
+			opacity: 0.7;
+			font-size: 14px;
+			color: gainsboro;
+			display: flex;
+			justify-content: space-between;
+			padding-top: 0.5rem;
+		}
+
+		@media(max-width: 768px) {
+			.info-wrapper {
+				display: none;
+			}
+
+			#player02 {
+				left: 50%;
+				transform: translateX(-50%) scale(0.8);
+				width: 80vw;
+				transform-origin: bottom;
+			}
+
+
+		}
+	</style>
+</head>
+
+<body>
+
+
+	<div class="reveal">
+		<div id="music_player">
+			<div id="player02" class="player horizontal">
+				<div class="wrapper">
+					<div class="info-wrapper">
+						<img src="" alt="LogoMusicImage" id="song-image">
+						<div class="info">
+							<h1 id="song-title"></h1>
+							<p>Song by <span id="song-author"></span></p>
+						</div>
+					</div>
+					<div class="song-controls">
+
+						<div class="prev" id="prev">
+							<svg width="30" height="30" viewBox="0 0 30 30" fill="none"
+								xmlns="http://www.w3.org/2000/svg">
+								<path
+									d="M2.33917 13.7397L12.9664 7.38149C13.2293 7.22152 13.5303 7.13509 13.8381 7.13123C14.1458 7.12737 14.4489 7.20622 14.7157 7.35955C15.0053 7.52815 15.245 7.77036 15.4107 8.0616C15.5763 8.35284 15.6619 8.68272 15.6588 9.01775V13.4657L25.8274 7.3798C26.0903 7.21983 26.3914 7.13341 26.6991 7.12955C27.0068 7.12568 27.3099 7.20454 27.5768 7.35786C27.8663 7.52646 28.1061 7.76867 28.2717 8.05991C28.4373 8.35115 28.5229 8.68103 28.5198 9.01606V21.4512C28.5231 21.7863 28.4376 22.1163 28.2719 22.4077C28.1063 22.699 27.8664 22.9413 27.5768 23.1099C27.3099 23.2632 27.0068 23.3421 26.6991 23.3382C26.3914 23.3344 26.0903 23.2479 25.8274 23.088L15.6588 16.9993V21.4489C15.6625 21.7844 15.5771 22.1149 15.4114 22.4067C15.2458 22.6985 15.0057 22.9411 14.7157 23.1099C14.4489 23.2632 14.1458 23.3421 13.8381 23.3382C13.5303 23.3344 13.2293 23.2479 12.9664 23.088L2.33917 16.7298C2.08653 16.5715 1.87825 16.3516 1.73386 16.0908C1.58948 15.83 1.51373 15.5368 1.51373 15.2387C1.51373 14.9406 1.58948 14.6473 1.73386 14.3865C1.87825 14.1257 2.08653 13.9058 2.33917 13.7476V13.7397Z"
+									fill="#E1E1E6" />
+							</svg>
+						</div>
+
+						<div class="play" style="width: auto;">
+
+							<div id="play">
+								<svg width="30" height="30" viewBox="0 0 30 30" fill="none"
+									xmlns="http://www.w3.org/2000/svg">
+									<path
+										d="M8.32137 25.586C7.9759 25.5853 7.63655 25.4948 7.33669 25.3232C6.66148 24.9406 6.24173 24.1978 6.24173 23.3915V7.07398C6.24173 6.26542 6.66148 5.52494 7.33669 5.14232C7.64369 4.96589 7.99244 4.87516 8.3465 4.87961C8.70056 4.88407 9.04692 4.98354 9.34938 5.16764L23.2952 13.5155C23.5859 13.6977 23.8255 13.9508 23.9916 14.251C24.1577 14.5511 24.2448 14.8886 24.2448 15.2316C24.2448 15.5747 24.1577 15.9121 23.9916 16.2123C23.8255 16.5125 23.5859 16.7655 23.2952 16.9478L9.34713 25.2979C9.0376 25.485 8.68307 25.5846 8.32137 25.586V25.586Z"
+										fill="#E1E1E6" />
+								</svg>
+							</div>
+							<div id="pause" style="display: none;">
+								<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+									color="#ffffff" class="size-6" width="30" height="30">
+									<path fill-rule="evenodd"
+										d="M6.75 5.25a.75.75 0 0 1 .75-.75H9a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H7.5a.75.75 0 0 1-.75-.75V5.25Zm7.5 0A.75.75 0 0 1 15 4.5h1.5a.75.75 0 0 1 .75.75v13.5a.75.75 0 0 1-.75.75H15a.75.75 0 0 1-.75-.75V5.25Z"
+										clip-rule="evenodd" />
+								</svg>
+							</div>
+						</div>
+
+						<div class="next" id="next">
+							<svg width="29" height="30" viewBox="0 0 29 30" fill="none"
+								xmlns="http://www.w3.org/2000/svg">
+								<g clip-path="url(#clip0_42_51)">
+									<path
+										d="M27.1426 13.7397L16.5154 7.38149C16.2525 7.22152 15.9514 7.13509 15.6437 7.13123C15.336 7.12737 15.0329 7.20622 14.766 7.35955C14.4765 7.52815 14.2368 7.77036 14.0711 8.0616C13.9055 8.35284 13.8199 8.68272 13.823 9.01775V13.4657L3.65435 7.3798C3.39144 7.21983 3.0904 7.13341 2.78268 7.12955C2.47495 7.12568 2.17183 7.20454 1.905 7.35786C1.61547 7.52646 1.37571 7.76867 1.21008 8.05991C1.04445 8.35115 0.958845 8.68103 0.961955 9.01606V21.4512C0.958745 21.7863 1.0443 22.1163 1.20994 22.4076C1.37558 22.699 1.61538 22.9413 1.905 23.1099C2.17183 23.2632 2.47495 23.3421 2.78268 23.3382C3.0904 23.3344 3.39144 23.2479 3.65435 23.088L13.823 16.9993V21.4489C13.8194 21.7844 13.9048 22.1149 14.0704 22.4066C14.2361 22.6984 14.4761 22.9411 14.766 23.1099C15.0329 23.2632 15.336 23.3421 15.6437 23.3382C15.9514 23.3344 16.2525 23.2479 16.5154 23.088L27.1426 16.7298C27.3953 16.5715 27.6035 16.3516 27.7479 16.0908C27.8923 15.83 27.968 15.5368 27.968 15.2387C27.968 14.9406 27.8923 14.6473 27.7479 14.3865C27.6035 14.1257 27.3953 13.9058 27.1426 13.7476V13.7397Z"
+										fill="#E1E1E6" />
+								</g>
+								<defs>
+									<clipPath id="clip0_42_51">
+										<rect width="28.8089" height="28.8089" fill="white"
+											transform="translate(0.0612183 0.828369)" />
+									</clipPath>
+								</defs>
+							</svg>
+						</div>
+					</div>
+
+					<div class="track-time">
+						<div class="track">
+							<div class="track-progress"></div>
+						</div>
+						<div class="time">
+							<div class="total-time" id="total-time"></div>
+							<div class="last-time" id="remaining-time"></div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
+		<div class="slides">
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+			<section data-transition="zoom-in fade-out">
+				<a href="/#/1"><img src="./images/image1.png" alt="Title Image"></a>
+			</section>
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+			<section data-transition="fade-in slide-out-right" class="bg-section"
+				style="background-image: url('https://source.unsplash.com/1600x900/?sunset');">
+				<div class="bg-text">
+					<p>Here's a collection of sweet memories for you to hold close. 💜</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-up fade-in">
+				<img src="images/image2.jpeg" alt="Image 2">
+				<div class="song-section">
+					<p> 🌸</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-left zoom-in" class="bg-section">
+				<div class="bg-text">
+					<p>Remember to enjoy the songs we picked out for you. ☮️</p>
+				</div>
+			</section>
+
+			<section data-transition="convex">
+				<img src="images/image4.jpeg" alt="Image 4">
+				<div class="song-section">
+					<p>"Daylight" - Shine brighter with every sunrise ☀️</p>
+				</div>
+			</section>
+
+			<section data-transition="slide-right fade-in">
+				<img src="images/image5.jpeg" alt="Image 5" style="transform: rotate(-5deg);">
+			</section>
+
+			<section data-transition="slide-up zoom-out">
+				<img src="images/image6.jpeg" alt="Image 6">
+			</section>
+
+			<section data-transition="slide-down zoom-in">
+				<img src="images/image7.jpeg" alt="Image 7">
+			</section>
+
+			<section data-transition="slide-left fade-in">
+				<img src="images/image8.jpeg" alt="Image 8">
+			</section>
+
+			<section data-transition="fade-up slide-in">
+				<img src="images/image9.jpeg" alt="Image 9" style="transform: rotate(5deg);">
+			</section>
+
+			<section data-transition="convex-in fade-out">
+				<img src="images/image10.jpeg" alt="Image 10">
+			</section>
+
+			<section data-transition="concave">
+				<img src="images/image11.jpeg" alt="Image 11">
+			</section>
+
+			<section data-transition="concave-in fade-out">
+				<img src="images/image12.jpeg" alt="Image 12">
+			</section>
+
+			<section data-transition="slide-left fade-in">
+				<img src="images/image13.jpg" alt="Image 13">
+			</section>
+
+			<section data-transition="slide-right zoom-in">
+				<img src="images/image14.jpeg" alt="Image 14">
+			</section>
+
+			<section data-transition="slide-up fade-in">
+				<img src="images/image15.jpg" alt="Image 15">
+			</section>
+
+			<section data-transition="fade-in slide-out-left">
+				<img src="images/image16.jpg" alt="Image 16">
+			</section>
+
+			<section data-transition="slide-down zoom-out">
+				<img src="images/image17.jpeg" alt="Image 17">
+			</section>
+
+			<section data-transition="convex-in fade-out">
+				<img src="images/image18.png" alt="Image 18">
+			</section>
+
+			<section data-transition="slide-left fade-in">
+				<img src="images/image19.png" alt="Image 19">
+			</section>
+
+			<section data-transition="slide-right zoom-in">
+				<img src="images/image20.png" alt="Image 20">
+				<p>Our Super Senior</p>
+			</section>
+
+
+			<section data-transition="fade-up zoom-out" class="bg-section">
+				<div class="bg-text">
+					<h2 style="font-size: 1em;">Thank you for being an amazing person!</h2>
+					<p style="font-size: 0.7em;">May your day be filled with love, joy, and unforgettable moments 💖
+					</p>
+					<p style="font-size: 0.8em;">— From Jnrs❤️</p>
+				</div>
+
+			</section>
+
+		</div>
+
+
+
+	</div>
+
+
+
+	<script>
+		const songs = [
+			{
+				title: "Happy Birthday, Snr.",
+				artist: "Elon Musk 🤩",
+				url: "./audio/birthDayCelebration.wav",
+				image: "./images/image4.jpeg"
+			},
+			{
+				title: "Heeriye Heeriye",
+				artist: "Arijit Singh and Jasleen Royal",
+				url: "./audio/song_4.mpeg",
+				image: "./images/heeriye_cover.jpeg"
+			},
+			{
+				title: "Channa Mereya",
+				artist: "Arijit Singh",
+				url: "./audio/song_1.mpeg",
+				image: "./images/channa_meriya_cover.jpg"
+			},
+			{
+				title: "Kun Faya Kun",
+				artist: "A.R. Rahman",
+				url: "./audio/song_2.mpeg",
+				image: "./images/kun_faya_kun_cover.png"
+			},
+			{
+				title: "Daylight",
+				artist: "Taylor Swift",
+				url: "./audio/song_3.mpeg",
+				image: "./images/day_light_cover.jpeg"
+			},
+			{
+				title: "Daylight",
+				artist: "Taylor Swift",
+				url: "./audio/song_3.mpeg",
+				image: "./images/day_light_cover.jpeg"
+			}
+		];
+
+		let currentSongIndex = 0;
+		const audioPlayer = new Audio();
+		const songTitle = document.getElementById('song-title');
+		const songAuthor = document.getElementById('song-author');
+		const songImage = document.getElementById('song-image');
+		const playButton = document.getElementById('play');
+		const pauseButton = document.getElementById('pause');
+		const prevButton = document.getElementById('prev');
+		const nextButton = document.getElementById('next');
+		const progressBar = document.getElementById('progress');
+		const totalTime = document.getElementById('total-time');
+		const remainingTime = document.getElementById('remaining-time');
+		var styleElem = document.head.appendChild(document.createElement("style"));
+
+		function loadSong(songIndex) {
+			const song = songs[songIndex];
+			songTitle.textContent = song.title;
+			songAuthor.textContent = song.artist;
+			songImage.src = song.image;
+			audioPlayer.src = song.url;
+			audioPlayer.load();
+		}
+
+		function playSong() {
+			audioPlayer.play();
+
+			console.log("playSong");
+			document.getElementById("pause").style.display = "block";
+
+			document.getElementById("play").style.display = "none";
+		}
+
+		function pauseSong() {
+			console.log("pauseSong");
+			audioPlayer.pause();
+			document.getElementById("play").style.display = "block";
+			document.getElementById("pause").style.display = "none";
+		}
+
+		playButton.addEventListener('click', () => {
+			playSong();
+		});
+		pauseButton.addEventListener('click', () => {
+			pauseSong();
+		})
+
+		prevButton.addEventListener('click', () => {
+			currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+			loadSong(currentSongIndex);
+			playSong();
+		});
+
+		nextButton.addEventListener('click', () => {
+			currentSongIndex = (currentSongIndex + 1) % songs.length;
+			loadSong(currentSongIndex);
+			playSong();
+		});
+
+		audioPlayer.addEventListener('loadedmetadata', () => {
+			totalTime.textContent = formatTime(audioPlayer.duration);
+			styleElem.innerHTML = `
+				.track::after {
+					width: 0%;
+				}
+			`;
+		});
+
+		audioPlayer.addEventListener('timeupdate', () => {
+			remainingTime.textContent = formatTime(audioPlayer.currentTime);
+			const progressPercent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+			styleElem.innerHTML = `
+				.track::after {
+					width: ${Math.round(progressPercent)}%
+				}	
+			`;
+			console.log(progressPercent || 0);
+		});
+
+		audioPlayer.addEventListener('ended', () => {
+			nextButton.click();
+		});
+
+		function formatTime(seconds) {
+			const minutes = Math.floor(seconds / 60);
+			const remainingSeconds = Math.floor(seconds % 60);
+			return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+		}
+
+		loadSong(currentSongIndex);
+		window.onload = function () {
+			playSong();
+		};
+	</script>
+
+	<script src="https://cdn.jsdelivr.net/npm/reveal.js@4.3.1/dist/reveal.js"></script>
+	<script>
+		Reveal.initialize({
+			hash: true,
+			controls: false,
+			slideNumber: true,
+			transition: 'slide', // none/fade/slide/convex/concave/zoom
+		});
+	</script>
+</body>
+
 </html>
